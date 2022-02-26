@@ -22,4 +22,11 @@ fn main() {
 
     let target_system = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
     gen_keyboard_map::generate_keyboard_map(&target_system).unwrap();
+
+    match std::env::var("CARGO_CFG_TARGET_OS").unwrap().as_str() {
+        "linux" => println!("cargo:rustc-link-lib=flutter_linux_gtk"),
+        "macos" => println!("cargo:rustc-link-lib=framework=FlutterMacOS"),
+        "windows" => println!("cargo:rustc-link-lib=flutter_windows.dll"),
+        os => panic!("unsupported os {}", os),
+    }
 }
